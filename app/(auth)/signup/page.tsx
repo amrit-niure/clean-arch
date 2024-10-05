@@ -16,27 +16,26 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormError from "@/app/_global-components/form-error";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/app/_hooks/use-toast";
-// import { signUpUser } from "@/app/auth/_actions/signup";
 import LoadingSpinner from "@/app/_global-components/loading-spinner";
-
-// enum ROLE {
-//   ADMIN = "ADMIN",
-//   USER = "USER",
-// }
+import { signUp } from "../actions";
 
 const signUpSchema = z.object({
-  firstName: z.string().min(3, "Name should be atleast 3 characters long").max(3,"Too long name"),
-  lastName: z.string().max(31,"Too long surname"),
+  firstName: z
+    .string()
+    .min(3, "Name should be atleast 3 characters long")
+    .max(56, "Too long name"),
+  lastName: z.string().max(56, "Too long surname"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long").max(31, "Too long password"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .max(31, "Too long password"),
 });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
 
 export default function SignIn() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
@@ -44,7 +43,7 @@ export default function SignIn() {
     register,
     handleSubmit,
     reset,
-    formState: { errors , isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm<SignUpInput>({
     defaultValues: {
       firstName: "",
@@ -56,27 +55,28 @@ export default function SignIn() {
   });
 
   async function onSubmit(data: SignUpInput) {
-    // const res = await signUpUser(data);
-    console.log(data)
-    // if (!res)
-    //   return toast({
-    //     variant: "destructive",
-    //     description: "Something went wrong in server.",
-    //   });
-    // if (res.error) {
-    //   toast({
-    //     variant: "destructive",
-    //     description: res.error,
-    //   });
-    // } else if (res.success) {
-    //   toast({
-    //     title: "Sign Up Successful",
-    //     variant: "default",
-    //     description:
-    //       "We have sent an verification email, please verify your email before signing in.",
-    //   });
-      reset();
+    const res = await signUp(data);
+    console.log(data);
+
+    if (!res)
+      return toast({
+        variant: "destructive",
+        description: "Something went wrong in server.",
+      });
+    if (res.error) {
+      toast({
+        variant: "destructive",
+        description: res.error,
+      });
     }
+    toast({
+      title: "Sign Up Successful",
+      variant: "default",
+      description:
+        "We have sent an verification email, please verify your email before signing in.",
+    });
+    reset();
+  }
   // }
   return (
     <div className="flex items-center justify-center h-[100vh]">
@@ -153,8 +153,12 @@ export default function SignIn() {
                   )}
                 </div>
               </div>
-              <Button type="submit" className="w-full flex gap-4" disabled={isSubmitting}>
-              {isSubmitting && <LoadingSpinner />}  Sign Up
+              <Button
+                type="submit"
+                className="w-full flex gap-4"
+                disabled={isSubmitting}
+              >
+                {isSubmitting && <LoadingSpinner />} Sign Up
               </Button>
             </div>
           </form>

@@ -1,18 +1,22 @@
-import { SessionCookie } from "@/src/entities/types/cookie";
+"use server"
+
 import { SignUpInput } from "./signup/page";
 import { InputParseError } from "@/src/entities/errors/common";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { signUpController } from "@/src/interface-adapters/controllers/auth/sign-up.controller";
+import { Cookie } from "lucia";
 
 export async function signUp(data: SignUpInput) {
     const { email, firstName, lastName, password } = data;
-    let sessionCookie: SessionCookie;
+    let sessionCookie: Cookie;
     try {
         const { cookie } = await signUpController({
             firstName,
             lastName,
             email,
-            password
+            password,
+            role: "USER"
         });
         sessionCookie = cookie;
     } catch (error) {

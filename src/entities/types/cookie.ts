@@ -1,6 +1,6 @@
 import { CookieAttributes} from "lucia";
 
-export interface SessionCookie {
+export interface Cookie {
     name: string;
     value: string;
     attributes: CookieAttributes;
