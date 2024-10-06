@@ -35,9 +35,12 @@ export class UsersRepository implements IUsersRepository {
 
     async createUser(input: User): Promise<User> {
         try {
-            const query = db.insert(users).values(input).returning();
+
+            console.log("here")
+            const query =  db.insert(users).values(input).returning();
 
             const [created] = await query.execute();
+            console.log("her 4e")
 
             if (created) {
                 return created;

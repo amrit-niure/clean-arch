@@ -19,21 +19,10 @@ import FormError from "@/app/_global-components/form-error";
 import { useToast } from "@/app/_hooks/use-toast";
 import LoadingSpinner from "@/app/_global-components/loading-spinner";
 import { signUp } from "../actions";
+import { userSchema } from "@/src/entities/models/users";
 
-const signUpSchema = z.object({
-  firstName: z
-    .string()
-    .min(3, "Name should be atleast 3 characters long")
-    .max(56, "Too long name"),
-  lastName: z.string().max(56, "Too long surname"),
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters long")
-    .max(31, "Too long password"),
-});
 
-export type SignUpInput = z.infer<typeof signUpSchema>;
+export type SignUpInput = z.infer<typeof userSchema>;
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -50,31 +39,27 @@ export default function SignIn() {
       lastName: "",
       email: "",
       password: "",
+      role:"USER"
     },
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(userSchema),
   });
 
   async function onSubmit(data: SignUpInput) {
     const res = await signUp(data);
-    console.log(data);
-
-    if (!res)
-      return toast({
-        variant: "destructive",
-        description: "Something went wrong in server.",
-      });
-    if (res.error) {
+    console.log(res);
+    if (res?.error) {
       toast({
         variant: "destructive",
         description: res.error,
       });
+    }else{
+      toast({
+        title: "Sign Up Successful",
+        variant: "default",
+        description:
+          "We have sent an verification email, please verify your email before signing in.",
+      });
     }
-    toast({
-      title: "Sign Up Successful",
-      variant: "default",
-      description:
-        "We have sent an verification email, please verify your email before signing in.",
-    });
     reset();
   }
   // }

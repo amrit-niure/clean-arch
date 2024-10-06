@@ -15,8 +15,8 @@ export const userSchema = z.object({
         .email({ message: "Invalid email address" })
         .max(255, { message: "Email address cannot exceed 255 characters" }),
     password: z.string()
-        .min(60, { message: "Hashed password must be at least 60 characters long" })
-        .max(255, { message: "Hashed password cannot exceed 255 characters" }),
+        .min(6, { message: "Password must be at least 6 characters long" })
+        .max(255, { message: "Password cannot exceed 255 characters" }),
     role: z.enum(roleEnum.enumValues, {
         errorMap: () => ({ message: "Invalid role. Must be either 'USER' or 'ADMIN'" })
     }).default('USER'),

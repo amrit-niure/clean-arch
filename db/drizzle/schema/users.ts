@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { sessions } from './sessions';
 import { resetTokens } from './reset_token';
@@ -8,7 +8,7 @@ import { roleEnum } from './enums';
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   firstName: varchar('first_name').notNull(),
-  middleName: varchar('first_name'),
+  middleName: varchar('middle_name'),
   lastName: varchar('last_name').notNull(),
   email: varchar('email').notNull(),
   hashedPassword: varchar('hashed_password').notNull(),

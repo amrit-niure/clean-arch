@@ -2,7 +2,8 @@ import { Container } from "inversify";
 
 import { AuthenticationModule } from "./modules/authentication.module";
 
-// import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
+import { DI_RETURN_TYPES, DI_SYMBOLS } from "./types";
+import { UsersModule } from "./modules/users.module";
 
 
 const ApplicationContainer = new Container({
@@ -11,10 +12,12 @@ const ApplicationContainer = new Container({
 
 export const initializeContainer = () => {
   ApplicationContainer.load(AuthenticationModule);
+  ApplicationContainer.load(UsersModule);
 };
 
 export const destroyContainer = () => {
   ApplicationContainer.unload(AuthenticationModule);
+  ApplicationContainer.unload(UsersModule);
 };
 
 if (process.env.NODE_ENV !== "test") {
