@@ -10,10 +10,10 @@ import { cache } from "react";
 
 @injectable()
 export class AuthenticationService implements IAuthenticationService {
-  private _lucia: Lucia;
+  private _lucia: Lucia ;
 
   constructor(
-    @inject(DI_SYMBOLS.IAuthenticationService)
+    @inject(DI_SYMBOLS.IUsersRepository)
     private _usersRepository: IUsersRepository,
   ) {
     this._lucia = new Lucia(luciaAdapter, {
@@ -43,7 +43,6 @@ export class AuthenticationService implements IAuthenticationService {
     if (!result.user || !result.session) {
       throw new UnauthenticatedError("Unauthenticated");
     }
-
     const user = await this._usersRepository.getUser(result.user.id);
 
     if (!user) {
@@ -88,7 +87,6 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     const { user, session } = await this.validateSession(sessionId);
-
     try {
       if (session && session.fresh) {
         const sessionCookie = this._lucia.createSessionCookie(session.id);
@@ -107,17 +105,16 @@ export class AuthenticationService implements IAuthenticationService {
 
 }
 
-
 declare module 'lucia' {
   interface Register {
-    Lucia: Lucia;
+    Lucia: typeof Lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
 
-interface DatabaseUserAttributes {
+export interface DatabaseUserAttributes {
   firstName: string,
-  middleName: string,
+  middleName: string | null,
   lastName: string,
   id: string;
   email: string;

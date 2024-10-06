@@ -6,8 +6,8 @@ import { ISignUp } from "@/src/entities/models/users";
 
 
 export async function signUpUseCase(input: ISignUp): Promise<{
-    // session: Session;
-    // cookie: Cookie;
+    session: Session;
+    cookie: Cookie;
     user: User;
 }> {
     const usersRepository = getInjection("IUsersRepository");
@@ -21,6 +21,8 @@ export async function signUpUseCase(input: ISignUp): Promise<{
         outputLen: 32,
         parallelism: 1,
     })
+    const authenticationService = getInjection("IAuthenticationService");
+    console.log("Signup Use case")
 
     const newUser = await usersRepository.createUser({
         firstName: input.firstName,
@@ -30,21 +32,15 @@ export async function signUpUseCase(input: ISignUp): Promise<{
         hashedPassword: hPw,
         role: input?.role
     });
-    // const authenticationService = getInjection("IAuthenticationService");
-    //i am getting circular dependancy error here for IAuthenticationService
-    // console.log("Signup Use case")
-    // console.log(newUser)
-    // const { cookie, session } = await authenticationService.createSession(newUser) as { cookie: Cookie & { serialize: () => string }, session: Session };
+    const { cookie, session } = await authenticationService.createSession(newUser) as { cookie: Cookie & { serialize: () => string }, session: Session };
 
-    // return {
-    //     cookie,
-    //     session,
-    //     user: {
-    //         id: newUser.id,
-    //     },
-    // };
-    return { user: newUser };
-
+    return {
+        cookie,
+        session,
+        user: {
+            id: newUser.id
+        }
+    };
 }
 
 
