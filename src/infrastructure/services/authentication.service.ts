@@ -10,7 +10,7 @@ import { cache } from "react";
 
 @injectable()
 export class AuthenticationService implements IAuthenticationService {
-  private _lucia: Lucia ;
+  private _lucia;
 
   constructor(
     @inject(DI_SYMBOLS.IUsersRepository)
@@ -26,10 +26,7 @@ export class AuthenticationService implements IAuthenticationService {
       },
       getUserAttributes: (attributes) => {
         return {
-          id: attributes.id,
-          name: attributes.firstName + attributes.middleName + attributes.lastName,
-          email: attributes.email,
-          role: attributes.email
+          ...attributes
         };
       },
     })
@@ -107,7 +104,7 @@ export class AuthenticationService implements IAuthenticationService {
 
 declare module 'lucia' {
   interface Register {
-    Lucia: typeof Lucia;
+    Lucia: AuthenticationService["_lucia"];
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
@@ -117,6 +114,5 @@ export interface DatabaseUserAttributes {
   middleName: string | null,
   lastName: string,
   id: string;
-  email: string;
   role: 'ADMIN' | 'USER';
 }

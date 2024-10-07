@@ -5,7 +5,7 @@ interface DashboardProps {};
 
 const Dashboard: FC<DashboardProps> = async ({}) => {
   const {user} = await validateServerProtectedRoute()
-  return <div> This is Dashobard {user?.email}</div>;
+  return <div> This is Dashobard {user?.role}</div>;
 };
 
 export default Dashboard;

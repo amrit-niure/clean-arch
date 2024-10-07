@@ -38,7 +38,11 @@ export async function signUpUseCase(input: ISignUp): Promise<{
         cookie,
         session,
         user: {
-            id: newUser.id
+            id: newUser.id,
+            firstName: newUser.firstName,
+            middleName: newUser.middleName,
+            lastName:  newUser.lastName,
+            role: newUser.role,
         }
     };
 }

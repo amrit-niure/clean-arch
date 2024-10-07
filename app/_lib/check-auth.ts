@@ -1,14 +1,40 @@
-
 import { getInjection } from "@/di/container";
-import { User } from 'lucia' // this user type has no type safety . it should have all the attributes i have returned form getAttributes function from \src\infrastructure\services\authentication.service.ts
+import { UnauthenticatedError, UnauthorizedError } from "@/src/entities/errors/auth";
+import { redirect } from "next/navigation";
+type Role = 'USER' | 'ADMIN';
+
+
+export async function checkAuth(requiredRole: Role = 'USER'): Promise<void> {
+  const authenticationService = getInjection("IAuthenticationService");
+
+  const { user, session } = await authenticationService.validateRequest()
+
+  if (!session) {
+    throw new UnauthenticatedError('Unauthenticated');
+  }
+
+  if (!user || user.role !== requiredRole) {
+    throw new UnauthorizedError('Unauthorized');
+  }
+}
+
 export async function validateServerProtectedRoute() {
   const authenticationService = getInjection("IAuthenticationService");
 
   const { user, session } = await authenticationService.validateRequest()
-  // check the type safety here user.role or user.email 
-  // console.log(user.)
-  // if (!session) {
-  //   redirect('/signin');
-  // }
+  if (!session) {
+    redirect('/signin');
+  }
   return { user, session };
 }
+
+
+export const validateAdminInServer = async () => {
+  const authenticationService = getInjection("IAuthenticationService");
+
+  const { user } = await authenticationService.validateRequest()
+  if (user?.role !== "ADMIN") {
+    redirect('/');
+  }
+  return { user };
+};
