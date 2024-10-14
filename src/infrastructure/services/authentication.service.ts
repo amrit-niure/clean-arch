@@ -114,5 +114,7 @@ export interface DatabaseUserAttributes {
   middleName: string | null,
   lastName: string,
   id: string;
+  email: string,
+  emailVerified: boolean,
   role: 'ADMIN' | 'USER';
 }

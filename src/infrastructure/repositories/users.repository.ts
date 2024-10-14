@@ -35,13 +35,9 @@ export class UsersRepository implements IUsersRepository {
 
     async createUser(input: User): Promise<User> {
         try {
-
-            console.log("here")
             const query =  db.insert(users).values(input).returning();
 
             const [created] = await query.execute();
-            console.log("her 4e")
-
             if (created) {
                 return created;
             } else {
@@ -49,6 +45,19 @@ export class UsersRepository implements IUsersRepository {
             }
         } catch (err) {
             throw err    // TODO: Convert to domain-specific error
+        }
+    }
+    async updateUser(id: string, input: Partial<User>): Promise<User | undefined> {
+        try {
+            const query = db.update(users).set(input).where(eq(users.id, id)).returning();
+            const [updated] = await query.execute();
+            if (updated) {
+                return updated;
+            } else {
+                throw new NotFoundError("User not found.");
+            }
+        } catch (err) {
+            throw err; // TODO: Convert to domain-specific error
         }
     }
 }

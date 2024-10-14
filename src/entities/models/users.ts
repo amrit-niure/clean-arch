@@ -32,6 +32,5 @@ export const loginSchema = z.object({
 });
 
 
-
 export type ISignUp = z.infer<typeof userSchema>
 export type ISignIn = z.infer<typeof loginSchema>
