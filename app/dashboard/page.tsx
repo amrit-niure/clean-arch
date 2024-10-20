@@ -1,11 +1,33 @@
-import { FC } from 'react';
-import { validateServerProtectedRoute } from '../_lib/check-auth';
+import React from "react";
+import { validateServerProtectedRoute } from "../_lib/check-auth";
 
-interface DashboardProps {};
+export default async function Dashboard() {
+  const { user } = await validateServerProtectedRoute();
+  return (
+    <div>
+      <b>Dashboard</b>
+      <p>{JSON.stringify(user, null, 2)}</p>
+    </div>
+  );
+}
 
-const Dashboard: FC<DashboardProps> = async ({}) => {
-  const {user} = await validateServerProtectedRoute()
-  return <div> Hello, {user?.firstName}</div>;
-};
+// "use client";
 
-export default Dashboard;
+// import { Button } from "@/components/ui/button";
+// import { signOut } from "@/features/actions/auth/signout";
+// import React from "react";
+// import { ValidateClientProtectedRoute } from "@/lib/validate-client-protected-route";
+
+// export default function Dashboard() {
+//   const {user} = ValidateClientProtectedRoute()
+//   return (
+//     <div>
+//       <b>Dashboard</b>
+//       <p>Hi, this is client page</p>
+//       <p>{JSON.stringify(user, null, 2)}</p>
+//       <Button type="submit" onClick={() => signOut()}>
+//         Sign out
+//       </Button>
+//     </div>
+//   );
+// }

@@ -15,8 +15,8 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/app/_hooks/use-toast";
-import FormError from "@/app/_components/form-error";
-import LoadingSpinner from "@/app/_components/loading-spinner";
+import FormError from "@/app/_components/misc/form-error";
+import LoadingSpinner from "@/app/_components/misc/loading-spinner";
 import { signIn } from "../actions";
 import { ISignIn, loginSchema } from "@/src/entities/models/users";
 

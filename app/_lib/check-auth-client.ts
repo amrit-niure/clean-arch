@@ -5,7 +5,7 @@ export const ValidateClientProtectedRoute = () => {
   const router = useRouter();
   const { user, session } = useSession();
   if (!user) {
-    router.push("/auth/signin");
+    router.push("/signin");
   }
   return { user, session };
 };
