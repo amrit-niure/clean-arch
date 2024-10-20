@@ -15,6 +15,20 @@
       "when": 1728192599982,
       "tag": "0001_dapper_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729330405933,
+      "tag": "0002_unknown_malice",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1729392531361,
+      "tag": "0003_thin_dakota_north",
+      "breakpoints": true
     }
   ]
 }

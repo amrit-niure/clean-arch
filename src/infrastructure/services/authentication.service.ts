@@ -18,7 +18,7 @@ export class AuthenticationService implements IAuthenticationService {
   ) {
     this._lucia = new Lucia(luciaAdapter, {
       sessionCookie: {
-        name: 'auth_session',
+        name: "auth_session",
         expires: false,
         attributes: {
           secure: process.env.NODE_ENV === "production",
@@ -26,14 +26,14 @@ export class AuthenticationService implements IAuthenticationService {
       },
       getUserAttributes: (attributes) => {
         return {
-          ...attributes
+          ...attributes,
         };
       },
-    })
+    });
   }
 
   async validateSession(
-    sessionId: string
+    sessionId: string,
   ): Promise<{ user: User; session: Session }> {
     const result = await this._lucia.validateSession(sessionId);
 
@@ -49,7 +49,9 @@ export class AuthenticationService implements IAuthenticationService {
     return { user, session: result.session };
   }
 
-  async createSession(user: User): Promise<{ session: Session; cookie: Cookie }> {
+  async createSession(
+    user: User,
+  ): Promise<{ session: Session; cookie: Cookie }> {
     const luciaSession: Session = await this._lucia.createSession(user.id, {});
 
     const cookie = this._lucia.createSessionCookie(luciaSession.id);
@@ -76,33 +78,33 @@ export class AuthenticationService implements IAuthenticationService {
   }
 
   // The validateRequest function now uses getCookie and setCookie methods
-  validateRequest = cache(async (): Promise<{ user: User | null; session: Session | null }> => {
-    const sessionId = this.getCookie(this._lucia.sessionCookieName);
+  validateRequest = cache(
+    async (): Promise<{ user: User | null; session: Session | null }> => {
+      const sessionId = this.getCookie(this._lucia.sessionCookieName);
 
-    if (!sessionId) {
-      return { user: null, session: null };
-    }
-
-    const { user, session } = await this.validateSession(sessionId);
-    try {
-      if (session && session.fresh) {
-        const sessionCookie = this._lucia.createSessionCookie(session.id);
-        this.setCookie(sessionCookie);
-      } else if (!session) {
-        const sessionCookie = this._lucia.createBlankSessionCookie();
-        this.setCookie(sessionCookie);
+      if (!sessionId) {
+        return { user: null, session: null };
       }
-    } catch {
-      // Handle Next.js error for setting cookies when rendering
-    }
 
-    return { user, session };
-  });
+      const { user, session } = await this.validateSession(sessionId);
+      try {
+        if (session && session.fresh) {
+          const sessionCookie = this._lucia.createSessionCookie(session.id);
+          this.setCookie(sessionCookie);
+        } else if (!session) {
+          const sessionCookie = this._lucia.createBlankSessionCookie();
+          this.setCookie(sessionCookie);
+        }
+      } catch {
+        // Handle Next.js error for setting cookies when rendering
+      }
 
-
+      return { user, session };
+    },
+  );
 }
 
-declare module 'lucia' {
+declare module "lucia" {
   interface Register {
     Lucia: AuthenticationService["_lucia"];
     DatabaseUserAttributes: DatabaseUserAttributes;
@@ -110,11 +112,11 @@ declare module 'lucia' {
 }
 
 export interface DatabaseUserAttributes {
-  firstName: string,
-  middleName: string | null,
-  lastName: string,
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
   id: string;
-  email: string,
-  emailVerified: boolean,
-  role: 'ADMIN' | 'USER';
+  email: string;
+  status: "ACTIVE" | "INACTIVE";
+  role: "ADMIN" | "USER";
 }

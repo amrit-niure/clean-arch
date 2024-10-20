@@ -10,7 +10,8 @@
     "prepare": "husky install",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "seed": "node -r esbuild-register db/drizzle/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

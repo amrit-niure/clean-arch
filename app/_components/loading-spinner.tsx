@@ -1,13 +1,20 @@
-import React from 'react'
+import React from "react";
 
 interface LoadingSpinnerProps {
-  size?: number
-  color?: string
+  size?: number;
+  color?: string;
 }
 
-export default function LoadingSpinner({ size = 20, color = 'currentColor' }: LoadingSpinnerProps) {
+export default function LoadingSpinner({
+  size = 20,
+  color = "currentColor",
+}: LoadingSpinnerProps) {
   return (
-    <div className="inline-flex items-center justify-center" role="status" aria-label="Loading">
+    <div
+      className="inline-flex items-center justify-center"
+      role="status"
+      aria-label="Loading"
+    >
       <svg
         width={size}
         height={size}
@@ -39,5 +46,5 @@ export default function LoadingSpinner({ size = 20, color = 'currentColor' }: Lo
         </path>
       </svg>
     </div>
-  )
+  );
 }

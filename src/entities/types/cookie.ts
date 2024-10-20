@@ -1,7 +1,7 @@
-import { CookieAttributes} from "lucia";
+// import { CookieAttributes} from "lucia";
 
-export interface Cookie {
-    name: string;
-    value: string;
-    attributes: CookieAttributes;
-}
+// export interface Cookie {
+//     name: string;
+//     value: string;
+//     attributes: CookieAttributes;
+// }

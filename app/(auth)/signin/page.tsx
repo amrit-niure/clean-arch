@@ -10,105 +10,48 @@ import { Label } from "@/app/_components/ui/label";
 import { Input } from "@/app/_components/ui/input";
 import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster } from "@/app/_components/ui/toaster";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/app/_hooks/use-toast";
-import FormError from "@/app/_global-components/form-error";
-// import { signInUser } from "@/app/auth/_actions/signin";
-// import { resendVerificationEmail } from "@/app/auth/_actions/resendVerificationEmail";
-import { useCountdown } from "usehooks-ts";
-import LoadingSpinner from "@/app/_global-components/loading-spinner";
-
-const signInSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
-
-export type SignInInput = z.infer<typeof signInSchema>;
+import FormError from "@/app/_components/form-error";
+import LoadingSpinner from "@/app/_components/loading-spinner";
+import { signIn } from "../actions";
+import { ISignIn, loginSchema } from "@/src/entities/models/users";
 
 export default function SignIn() {
-  const [count, { startCountdown, stopCountdown, resetCountdown }] =
-    useCountdown({
-      countStart: 60,
-      intervalMs: 1000,
-    });
-
-  useEffect(() => {
-    if (count == 0) {
-      stopCountdown();
-      resetCountdown();
-    }
-  }, [count]);
-
   const [showPassword, setShowPassword] = useState(false);
-  const [showResendVerificationEmail, setShowResendVerificationEmail] =
-    useState(false);
-  const router = useRouter();
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
-    getValues,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<SignInInput>({
-    resolver: zodResolver(signInSchema),
+  } = useForm<ISignIn>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: SignInInput) {
-    // const res = await signInUser(data);
-    alert("Submitted");
-    // if (!res)
-    //   return toast({
-    //     variant: "destructive",
-    //     description: "Something went wrong in server.",
-    //   });
-    // if (res.error) {
-    //   toast({
-    //     variant: "destructive",
-    //     description: res.error,
-    //   });
-    //   if (res.key === "email_not_verified") {
-    //     setShowResendVerificationEmail(true);
-    //   }
-    // } else if (res.success) {
-    //   toast({
-    //     variant: "default",
-    //     title:`🙏Welcome, ${data.email.split('@')[0].charAt(0).toUpperCase() + data.email.split('@')[0].slice(1)} Boss`,
-    //     description: "Signed in successfully",
-    //   });
-    reset();
+  async function onSubmitHandler(data: ISignIn) {
+    const res = await signIn(data);
+    if (res?.error) {
+      toast({
+        variant: "destructive",
+        description: res.error,
+      });
+    } else {
+      toast({
+        variant: "default",
+        title: `🙏Welcome, ${data.email.split("@")[0].charAt(0).toUpperCase() + data.email.split("@")[0].slice(1)} Boss`,
+        description: "Signed in successfully",
+      });
+      reset();
+    }
   }
-  // }
-
-  // const onResendVerificationEmail = async () => {
-  //   const email = getValues("email");
-  //   const res = await resendVerificationEmail(email);
-
-  //   if (res?.error) {
-  //     toast({
-  //       variant: "destructive",
-  //       description: res.error,
-  //     });
-
-  //   } else {
-  //     toast({
-  //       variant: "default",
-  //       description: "Verification email sent!",
-  //     });
-  //     startCountdown();
-  //   }
-  // };
-
   return (
     <div className="flex items-center justify-center h-[100vh]">
       <Card className="w-full max-w-md">
@@ -119,8 +62,7 @@ export default function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* <form > */}
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -170,18 +112,6 @@ export default function SignIn() {
                   )}
                 </div>
               </div>
-              {showResendVerificationEmail && (
-                <Button
-                  type="button"
-                  variant={"link"}
-                  className="w-full"
-                  // onClick={onResendVerificationEmail}
-                  disabled={count > 0 && count < 60}
-                >
-                  Send verification email{" "}
-                  {count > 0 && count < 60 && `in ${count}s`}
-                </Button>
-              )}
               <Button
                 type="submit"
                 className="w-full flex gap-4"
@@ -199,7 +129,6 @@ export default function SignIn() {
           </div>
         </CardContent>
       </Card>
-      <Toaster />
     </div>
   );
 }

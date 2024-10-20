@@ -1,34 +1,37 @@
-"use server"
+"use server";
 
-import { SignUpInput } from "./signup/page";
 import { InputParseError } from "@/src/entities/errors/common";
 import { redirect } from "next/navigation";
-import { signUpController } from "@/src/interface-adapters/controllers/auth/sign-up.controller";
+import { SignInInput } from "./signin/page";
+import { signInController } from "@/src/interface-adapters/controllers/auth/sign-in.controller";
+import { Cookie } from "lucia";
+import { cookies } from "next/headers";
 
-export async function signUp(data: SignUpInput) {
-    const { email, firstName, lastName, password } = data;
-    try {
-   await signUpController({
-            firstName,
-            lastName,
-            email,
-            password,
-            role: "USER"
-        });
-
-    } catch (error) {
-        console.log(error)
-        if (error instanceof InputParseError) {
-            return {
-                error:
-                    "Invalid data. Make sure the Password and Confirm Password match.",
-            };
-        }
-        return {
-            error:
-              "An error happened. The developers have been notified. Please try again later. Message: " +
-              (error as Error).message,
-          };
+export async function signIn(data: SignInInput) {
+  const { email, password } = data;
+  let sessionCookie: Cookie;
+  try {
+    const result = await signInController({
+      email,
+      password,
+    });
+    sessionCookie = result.cookie;
+  } catch (error) {
+    console.log(error);
+    if (error instanceof InputParseError) {
+      return {
+        error:
+          "Invalid data. Make sure the Password and Confirm Password match.",
+      };
     }
-      redirect("/dashboard");
+    return {
+      error: (error as Error).message,
+    };
+  }
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes,
+  );
+  redirect("/dashboard");
 }
