@@ -2,12 +2,12 @@
 
 import { InputParseError } from "@/src/entities/errors/common";
 import { redirect } from "next/navigation";
-import { SignInInput } from "./signin/page";
 import { signInController } from "@/src/interface-adapters/controllers/auth/sign-in.controller";
 import { Cookie } from "lucia";
 import { cookies } from "next/headers";
+import { ISignIn } from "@/src/entities/models/users";
 
-export async function signIn(data: SignInInput) {
+export async function signIn(data: ISignIn) {
   const { email, password } = data;
   let sessionCookie: Cookie;
   try {
