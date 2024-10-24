@@ -1,23 +1,21 @@
 import React from "react";
-import { Sidebar } from "@/app/_components/layout/sidebar";
 import { Toaster } from "@/app/_components/ui/toaster";
-import NavBar from "@/app/_components/layout/nav-bar";
+import { SidebarProvider, SidebarTrigger } from "@/app/_components/ui/sidebar";
+import { AppSidebar } from "@/app/_components/app-sidebar";
 
-interface MailPageProps {
+interface LayoutProps {
   children?: React.ReactNode;
 }
 
-export default function MailPage({ children }: MailPageProps) {
+export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="">
-        <Sidebar />
-      </div>
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <NavBar />
-        <main className="flex-1 overflow-y-auto p-4">{children}</main>
-      </div>
+    <SidebarProvider>
+      <AppSidebar collapsible="icon" />
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
       <Toaster />
-    </div>
+    </SidebarProvider>
   );
 }
