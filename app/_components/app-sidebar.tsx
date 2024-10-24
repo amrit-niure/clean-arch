@@ -35,8 +35,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const data = {
     user: {
-      name: user!.firstName + user!.lastName,
-      email: user!.email,
+      name: user?.firstName ?? "" + user?.lastName,
+      email: user?.email ?? "",
     },
     navMain: [
       {
@@ -67,35 +67,35 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [
           {
             title: "Training Visa (407)",
-            url: "dashboard/visa-applications/407",
+            url: "/dashboard/visa-applications/407",
           },
           {
             title: "Work Visa (482)",
-            url: "dashboard/visa-applications/482",
+            url: "/dashboard/visa-applications/482",
           },
           {
             title: "Student Visa (500)",
-            url: "dashboard/visa-applications/500",
+            url: "/dashboard/visa-applications/500",
           },
           {
             title: "Tourist Visa (600)",
-            url: "dashboard/visa-applications/600",
+            url: "/dashboard/visa-applications/600",
           },
         ],
       },
       {
         title: "Job Ready Program",
-        url: "#",
+        url: "/dashboard/job-ready-program",
         icon: Briefcase,
       },
       {
         title: "Skills Assessment",
-        url: "#",
+        url: "/dashboard/skills-assessment",
         icon: Award,
       },
       {
         title: "Team",
-        url: "#",
+        url: "/dashboard/team",
         icon: Users,
       },
     ],
@@ -123,13 +123,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-semibold">Apply World</span>
+                  <span className="truncate text-xs">Visa & Migrations</span>
                 </div>
               </a>
             </SidebarMenuButton>

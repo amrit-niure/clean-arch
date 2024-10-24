@@ -25,9 +25,9 @@ export async function validateServerProtectedRoute() {
   try {
     const { user, session } = await authenticationService.validateRequest();
 
-    if (!session) {
-      redirect("/signin");
-    }
+    // if (!session) {
+    //   redirect("/signin");
+    // }
     return { user, session };
   } catch (err) {
     console.log(err);
