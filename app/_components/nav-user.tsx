@@ -29,6 +29,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/app/_components/ui/sidebar";
+import { useSession } from "./providers/session-provider";
+import { signOut } from "../(auth)/actions";
 
 export function NavUser({
   user,
@@ -40,7 +42,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const { session } = useSession();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -102,7 +104,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => session && signOut(session.id)}>
               <LogOut />
               Log out
             </DropdownMenuItem>
