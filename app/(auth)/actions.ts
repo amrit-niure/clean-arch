@@ -5,6 +5,7 @@ import { signInController } from "@/src/interface-adapters/controllers/auth/sign
 import { Cookie } from "lucia";
 import { cookies } from "next/headers";
 import { ISignIn } from "@/src/entities/models/users";
+import { redirect } from "next/navigation";
 
 export async function signIn(data: ISignIn) {
   const { email, password } = data;
@@ -32,5 +33,5 @@ export async function signIn(data: ISignIn) {
     sessionCookie.value,
     sessionCookie.attributes,
   );
-  // redirect("/dashboard");
+  redirect("/dashboard");
 }
