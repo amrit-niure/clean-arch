@@ -41,28 +41,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: [
       {
         title: "Home",
-        url: "#",
+        url: "/dashboard",
         icon: SquareTerminal,
         isActive: true,
       },
       {
         title: "Appointments",
-        url: "#",
+        url: "/dashboard/appointments",
         icon: Bot,
       },
       {
         title: "Enquiries",
-        url: "#",
+        url: "/dashboard/enquiries",
         icon: CircleHelp,
       },
       {
         title: "Customers",
-        url: "#",
+        url: "/dashboard/customers",
         icon: Smile,
       },
       {
         title: "Visa Applications",
-        url: "#",
+        url: "/dashboard/visa-applications",
         icon: BookOpen,
         items: [
           {

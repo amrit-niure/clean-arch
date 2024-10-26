@@ -17,8 +17,8 @@ export default function Layout({ children }: LayoutProps) {
     <SidebarProvider>
       <AppSidebar collapsible="icon" variant="floating" />
       <SidebarInset>
-        <header className="flex h-12 shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 px-4">
+        <header className="flex h-12 shrink-0 items-center w-full justify-between pr-4">
+          <div className="flex items-center gap-2 ">
             <SidebarTrigger className="-ml-1" />
           </div>
           <ModeToggle />
