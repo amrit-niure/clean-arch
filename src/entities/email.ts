@@ -15,16 +15,3 @@ export interface Email {
   html: ReactNode;
 }
 
-// EmailResponse interface
-export interface EmailResponse {
-  success: boolean;
-  message: string;
-}
-
-export interface EmailVerificationData {
-  code: string,
-  email: string,
-  expiresAt: Date,
-  userId: string,
-  sentAt: Date
-}
