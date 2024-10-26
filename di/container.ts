@@ -26,8 +26,8 @@ if (process.env.NODE_ENV !== "test") {
   initializeContainer();
 }
 
-export function getInjection<K extends keyof typeof DI_SYMBOLS>(
-  symbol: K,
-): DI_RETURN_TYPES[K] {
+export function getInjection<
+  K extends keyof typeof DI_SYMBOLS & keyof DI_RETURN_TYPES,
+>(symbol: K): DI_RETURN_TYPES[K] {
   return ApplicationContainer.get(DI_SYMBOLS[symbol]);
 }
