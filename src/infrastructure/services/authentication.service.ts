@@ -67,6 +67,41 @@ export class AuthenticationService implements IAuthenticationService {
     return { blankCookie };
   }
 
+  // // Method to get a cookie by name
+  // private getCookie(cookieName: string): string | null {
+  //   return cookies().get(cookieName)?.value ?? null;
+  // }
+
+  // // Method to set a cookie
+  // private setCookie(cookie: Cookie): void {
+  //   cookies().set(cookie.name, cookie.value, cookie.attributes);
+  // }
+
+  // // The validateRequest function now uses getCookie and setCookie methods
+  // validateRequest = cache(
+  //   async (): Promise<{ user: User | null; session: Session | null }> => {
+  //     const sessionId = this.getCookie(this._lucia.sessionCookieName);
+
+  //     if (!sessionId) {
+  //       return { user: null, session: null };
+  //     }
+
+  //     const { user, session } = await this.validateSession(sessionId);
+  //     try {
+  //       if (session && session.fresh) {
+  //         const sessionCookie = this._lucia.createSessionCookie(session.id);
+  //         this.setCookie(sessionCookie);
+  //       } else if (!session) {
+  //         const sessionCookie = this._lucia.createBlankSessionCookie();
+  //         this.setCookie(sessionCookie);
+  //       }
+  //     } catch {
+  //       // Handle Next.js error for setting cookies when rendering
+  //     }
+
+  //     return { user, session };
+  //   },
+  // );
   // Method to get a cookie by name
   private getCookie(cookieName: string): string | null {
     return cookies().get(cookieName)?.value ?? null;
@@ -77,29 +112,33 @@ export class AuthenticationService implements IAuthenticationService {
     cookies().set(cookie.name, cookie.value, cookie.attributes);
   }
 
-  // The validateRequest function now uses getCookie and setCookie methods
+  // Updated validateRequest function to avoid async context issues with cookies
   validateRequest = cache(
     async (): Promise<{ user: User | null; session: Session | null }> => {
+      // Get the session ID cookie synchronously
       const sessionId = this.getCookie(this._lucia.sessionCookieName);
 
       if (!sessionId) {
         return { user: null, session: null };
       }
 
-      const { user, session } = await this.validateSession(sessionId);
       try {
-        if (session && session.fresh) {
+        // Proceed with async operations after reading the session ID
+        const { user, session } = await this.validateSession(sessionId);
+
+        if (session?.fresh) {
           const sessionCookie = this._lucia.createSessionCookie(session.id);
           this.setCookie(sessionCookie);
         } else if (!session) {
-          const sessionCookie = this._lucia.createBlankSessionCookie();
-          this.setCookie(sessionCookie);
+          const blankSessionCookie = this._lucia.createBlankSessionCookie();
+          this.setCookie(blankSessionCookie);
         }
-      } catch {
-        // Handle Next.js error for setting cookies when rendering
-      }
 
-      return { user, session };
+        return { user, session };
+      } catch (error) {
+        console.error("Error during session validation:", error);
+        return { user: null, session: null };
+      }
     },
   );
 }

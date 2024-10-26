@@ -3,8 +3,9 @@ import {
   UnauthenticatedError,
   UnauthorizedError,
 } from "@/src/entities/errors/auth";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+// import { cookies } from "next/headers";
 type Role = "USER" | "ADMIN";
 
 export async function checkAuth(requiredRole: Role = "USER"): Promise<void> {
@@ -21,25 +22,10 @@ export async function checkAuth(requiredRole: Role = "USER"): Promise<void> {
   }
 }
 
-// export async function validateServerProtectedRoute() {
-//   const authenticationService = getInjection("IAuthenticationService");
-//   try {
-//     const { user, session } = await authenticationService.validateRequest();
-
-//     if (session === null) {
-//       redirect("/signin");
-//     }
-//     return { user, session };
-//   } catch (err) {
-//     console.log(err);
-//     return { user: null, session: null };
-//   }
-// }
-
 export async function validateServerProtectedRoute() {
   const authenticationService = getInjection("IAuthenticationService");
 
-  // Retrieve session ID from cookies immediately
+  // Retrieve session ID from cookies immediately or we can also retrive the cookies in layout and send it through parameter to validateServerProtectedRoute
   const sessionId = cookies().get("sessionId")?.value;
 
   // Check if session ID is missing and redirect if needed
