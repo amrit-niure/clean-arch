@@ -52,8 +52,6 @@ export default function SignIn() {
       reset();
     }
   }
-
-  console.log("Sign In Page");
   return (
     <div className="flex items-center justify-center h-[100vh]">
       <Card className="w-full max-w-md">

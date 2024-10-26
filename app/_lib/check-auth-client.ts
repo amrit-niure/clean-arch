@@ -1,20 +1,29 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "@/app/_components/providers/session-provider";
+import { useEffect } from "react";
 
 export const ValidateClientProtectedRoute = () => {
   const router = useRouter();
   const { user, session } = useSession();
-  if (!user) {
-    router.push("/signin");
-  }
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/signin");
+    }
+  }, [user, router]);
+
   return { user, session };
 };
 
 export const ValidateAdminInClient = () => {
   const router = useRouter();
   const { user } = useSession();
-  if (user?.role !== "ADMIN") {
-    router.push("/");
-  }
+
+  useEffect(() => {
+    if (user && user.role !== "ADMIN") {
+      router.push("/");
+    }
+  }, [user, router]);
+
   return { user };
 };
