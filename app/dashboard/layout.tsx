@@ -6,6 +6,7 @@ import {
   SidebarTrigger,
 } from "@/app/_components/ui/sidebar";
 import { AppSidebar } from "@/app/_components/app-sidebar";
+import { ModeToggle } from "../_components/misc/toggle-mode";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
           </div>
+          <ModeToggle />
         </header>
         <main className="px-4">{children}</main>
         <Toaster />
