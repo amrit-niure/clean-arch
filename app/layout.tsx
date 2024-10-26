@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "@/app/_components/ui/toaster";
 import "./globals.css";
-import { validateServerProtectedRoute } from "./_lib/check-auth";
+import { getSessionForLayout } from "./_lib/check-auth";
 import { SessionProvider } from "./_components/providers/session-provider";
 import { ThemeProvider } from "./_components/providers/theme-provider";
 
@@ -27,7 +27,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const sessionData = await validateServerProtectedRoute();
+  // const sessionData = await validateServerProtectedRoute();
+  const sessionData = await getSessionForLayout();
   return (
     <html lang="en">
       <body

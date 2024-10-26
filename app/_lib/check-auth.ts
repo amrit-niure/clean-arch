@@ -35,7 +35,6 @@ export async function validateServerProtectedRoute() {
   try {
     const { user, session } =
       await authenticationService.validateSession(sessionId);
-
     if (session === null) {
       redirect("/signin");
     }
@@ -54,4 +53,13 @@ export const validateAdminInServer = async () => {
     redirect("/");
   }
   return { user };
+};
+
+export const getSessionForLayout = async () => {
+  const authenticationService = getInjection("IAuthenticationService");
+  const sessionId = cookies().get("auth_session")?.value;
+  if (!sessionId) {
+    return { user: null, session: null };
+  }
+  return await authenticationService.getSession(sessionId);
 };

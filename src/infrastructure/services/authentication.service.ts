@@ -67,41 +67,6 @@ export class AuthenticationService implements IAuthenticationService {
     return { blankCookie };
   }
 
-  // // Method to get a cookie by name
-  // private getCookie(cookieName: string): string | null {
-  //   return cookies().get(cookieName)?.value ?? null;
-  // }
-
-  // // Method to set a cookie
-  // private setCookie(cookie: Cookie): void {
-  //   cookies().set(cookie.name, cookie.value, cookie.attributes);
-  // }
-
-  // // The validateRequest function now uses getCookie and setCookie methods
-  // validateRequest = cache(
-  //   async (): Promise<{ user: User | null; session: Session | null }> => {
-  //     const sessionId = this.getCookie(this._lucia.sessionCookieName);
-
-  //     if (!sessionId) {
-  //       return { user: null, session: null };
-  //     }
-
-  //     const { user, session } = await this.validateSession(sessionId);
-  //     try {
-  //       if (session && session.fresh) {
-  //         const sessionCookie = this._lucia.createSessionCookie(session.id);
-  //         this.setCookie(sessionCookie);
-  //       } else if (!session) {
-  //         const sessionCookie = this._lucia.createBlankSessionCookie();
-  //         this.setCookie(sessionCookie);
-  //       }
-  //     } catch {
-  //       // Handle Next.js error for setting cookies when rendering
-  //     }
-
-  //     return { user, session };
-  //   },
-  // );
   // Method to get a cookie by name
   private getCookie(cookieName: string): string | null {
     return cookies().get(cookieName)?.value ?? null;
@@ -141,6 +106,22 @@ export class AuthenticationService implements IAuthenticationService {
       }
     },
   );
+
+  async getSession(
+    sessionId: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this._lucia.validateSession(sessionId);
+
+    if (!result.user || !result.session) {
+      return { user: null, session: null };
+    }
+    const user = await this._usersRepository.getUser(result.user.id);
+
+    if (!user) {
+      return { user: null, session: null };
+    }
+    return { user, session: result.session };
+  }
 }
 
 declare module "lucia" {
