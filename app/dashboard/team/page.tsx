@@ -1,9 +1,21 @@
 "use client";
 
-import React from "react";
+import PageHeader from "@/app/_components/page-header";
+import { FC } from "react";
 
-function page() {
-  return <div>page</div>;
-}
+interface TeamProps {}
 
-export default page;
+const Team: FC<TeamProps> = ({}) => {
+  return (
+    <div className="">
+      {" "}
+      <PageHeader
+        description="View contact information of all the team members."
+        header="Team"
+        pagePath="/dashboard/team"
+      />{" "}
+    </div>
+  );
+};
+
+export default Team;
