@@ -1,4 +1,10 @@
 DO $$ BEGIN
+ CREATE TYPE "public"."branch" AS ENUM('AUSTRALIA', 'NEPAL', 'DUBAI', 'PHILIPPINES');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "public"."jrp_stage" AS ENUM('JRPRE', 'JRE', 'JRWA', 'JRFA');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -47,6 +53,12 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ CREATE TYPE "public"."user_status" AS ENUM('ACTIVE', 'INACTIVE');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "public"."visa_type" AS ENUM('SUB_500', 'SUB_482', 'SUB_407', 'SUB_186', 'SUB_189', 'SUB_190', 'SUB_600', 'SUB_820', 'SUB_801');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -87,16 +99,6 @@ CREATE TABLE IF NOT EXISTS "customers" (
 	CONSTRAINT "customers_passport_number_unique" UNIQUE("passport_number")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "email_verification_codes" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"code" varchar NOT NULL,
-	"user_id" uuid NOT NULL,
-	"email" varchar NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"sent_at" timestamp NOT NULL,
-	CONSTRAINT "email_verification_codes_user_id_unique" UNIQUE("user_id")
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reset_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"code" varchar NOT NULL,
@@ -113,12 +115,17 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"first_name" varchar,
-	"last_name" varchar NOT NULL,
-	"email" varchar NOT NULL,
+	"first_name" varchar(255) NOT NULL,
+	"middle_name" varchar(255),
+	"last_name" varchar(255) NOT NULL,
+	"email" varchar(255) NOT NULL,
 	"hashed_password" varchar NOT NULL,
 	"role" "role" DEFAULT 'USER' NOT NULL,
-	"email_verified" boolean DEFAULT false NOT NULL,
+	"title" varchar(255) NOT NULL,
+	"phone_number" numeric NOT NULL,
+	"branch" "branch" DEFAULT 'AUSTRALIA',
+	"address" varchar(256) NOT NULL,
+	"status" "user_status" DEFAULT 'ACTIVE' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -179,12 +186,6 @@ CREATE TABLE IF NOT EXISTS "skills_assessments" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "email_verification_codes" ADD CONSTRAINT "email_verification_codes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "reset_tokens" ADD CONSTRAINT "reset_tokens_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;

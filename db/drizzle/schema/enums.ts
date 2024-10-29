@@ -8,6 +8,12 @@ export const sbsStatusEnum = pgEnum("sbs_status", [
   "APPROVED",
   "NOT APPROVED",
 ]);
+export const branchEnum = pgEnum("branch", [
+  "AUSTRALIA",
+  "NEPAL",
+  "DUBAI",
+  "PHILIPPINES",
+]);
 export const userStatusEnum = pgEnum("user_status", ["ACTIVE", "INACTIVE"]);
 export const visaTypeEnum = pgEnum("visa_type", [
   "SUB_500",

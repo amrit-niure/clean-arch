@@ -27,12 +27,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const sessionData = await validateServerProtectedRoute();
   const sessionData = await getSessionForLayout();
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={` ${geistSans.variable} ${geistMono.variable}  antialiased `}
       >
         <ThemeProvider
           attribute="class"

@@ -1,5 +1,5 @@
 {
-  "id": "c094bbed-c377-4c8f-8e3b-4124493e054b",
+  "id": "6adde3cd-a162-4740-aa69-50b51b3e55f7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -85,23 +85,17 @@
         "company_email_unique": {
           "name": "company_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "company_phone_unique": {
           "name": "company_phone_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
+          "columns": ["phone"]
         },
         "company_abn_unique": {
           "name": "company_abn_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "abn"
-          ]
+          "columns": ["abn"]
         }
       }
     },
@@ -193,92 +187,17 @@
         "customers_email_unique": {
           "name": "customers_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "customers_phone_unique": {
           "name": "customers_phone_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
+          "columns": ["phone"]
         },
         "customers_passport_number_unique": {
           "name": "customers_passport_number_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "passport_number"
-          ]
-        }
-      }
-    },
-    "public.email_verification_codes": {
-      "name": "email_verification_codes",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "code": {
-          "name": "code",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sent_at": {
-          "name": "sent_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "email_verification_codes_user_id_users_id_fk": {
-          "name": "email_verification_codes_user_id_users_id_fk",
-          "tableFrom": "email_verification_codes",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "email_verification_codes_user_id_unique": {
-          "name": "email_verification_codes_user_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["passport_number"]
         }
       }
     },
@@ -318,12 +237,8 @@
           "name": "reset_tokens_user_id_users_id_fk",
           "tableFrom": "reset_tokens",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -333,9 +248,7 @@
         "reset_tokens_code_unique": {
           "name": "reset_tokens_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "code"
-          ]
+          "columns": ["code"]
         }
       }
     },
@@ -368,12 +281,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -394,19 +303,25 @@
         },
         "first_name": {
           "name": "first_name",
-          "type": "varchar",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "middle_name": {
+          "name": "middle_name",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
         "last_name": {
           "name": "last_name",
-          "type": "varchar",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
         "email": {
           "name": "email",
-          "type": "varchar",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -424,12 +339,39 @@
           "notNull": true,
           "default": "'USER'"
         },
-        "email_verified": {
-          "name": "email_verified",
-          "type": "boolean",
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "branch": {
+          "name": "branch",
+          "type": "branch",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'AUSTRALIA'"
+        },
+        "address": {
+          "name": "address",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "user_status",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": false
+          "default": "'ACTIVE'"
         },
         "created_at": {
           "name": "created_at",
@@ -574,12 +516,8 @@
           "name": "visa_applications_customer_id_customers_id_fk",
           "tableFrom": "visa_applications",
           "tableTo": "customers",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -589,16 +527,12 @@
         "visa_applications_email_unique": {
           "name": "visa_applications_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "visa_applications_passport_number_unique": {
           "name": "visa_applications_passport_number_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "passport_number"
-          ]
+          "columns": ["passport_number"]
         }
       }
     },
@@ -709,12 +643,8 @@
           "name": "job_ready_programs_customer_id_customers_id_fk",
           "tableFrom": "job_ready_programs",
           "tableTo": "customers",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -826,12 +756,8 @@
           "name": "skills_assessments_customer_id_customers_id_fk",
           "tableFrom": "skills_assessments",
           "tableTo": "customers",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -841,40 +767,30 @@
     }
   },
   "enums": {
+    "public.branch": {
+      "name": "branch",
+      "schema": "public",
+      "values": ["AUSTRALIA", "NEPAL", "DUBAI", "PHILIPPINES"]
+    },
     "public.jrp_stage": {
       "name": "jrp_stage",
       "schema": "public",
-      "values": [
-        "JRPRE",
-        "JRE",
-        "JRWA",
-        "JRFA"
-      ]
+      "values": ["JRPRE", "JRE", "JRWA", "JRFA"]
     },
     "public.outcome": {
       "name": "outcome",
       "schema": "public",
-      "values": [
-        "SUCCESSFUL",
-        "UNSUCCESSFUL",
-        "PENDING"
-      ]
+      "values": ["SUCCESSFUL", "UNSUCCESSFUL", "PENDING"]
     },
     "public.overseer": {
       "name": "overseer",
       "schema": "public",
-      "values": [
-        "DEEPAK",
-        "GANESH"
-      ]
+      "values": ["DEEPAK", "GANESH"]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": [
-        "ADMIN",
-        "USER"
-      ]
+      "values": ["ADMIN", "USER"]
     },
     "public.sa_status": {
       "name": "sa_status",
@@ -899,20 +815,17 @@
     "public.sbs_status": {
       "name": "sbs_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "APPROVED",
-        "NOT APPROVED"
-      ]
+      "values": ["PENDING", "APPROVED", "NOT APPROVED"]
     },
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "APPROVED",
-        "REJECTED"
-      ]
+      "values": ["PENDING", "APPROVED", "REJECTED"]
+    },
+    "public.user_status": {
+      "name": "user_status",
+      "schema": "public",
+      "values": ["ACTIVE", "INACTIVE"]
     },
     "public.visa_type": {
       "name": "visa_type",
