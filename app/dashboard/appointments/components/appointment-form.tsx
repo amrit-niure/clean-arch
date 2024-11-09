@@ -3,7 +3,6 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -20,32 +19,40 @@ import {
   SheetDescription,
 } from "@/app/_components/ui/sheet";
 import { CalendarPlus } from "lucide-react";
+import {
+  appointmentSchema,
+  IAppointment,
+} from "@/src/entities/models/appointment";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/_components/ui/select";
+import { Textarea } from "@/app/_components/ui/textarea";
 
 interface AppointmentFormProps {
   onClose: () => void;
 }
 
-const appointmentSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  date: z.string().min(1, "Date is required"),
-  time: z.string().min(1, "Time is required"),
-  description: z.string().optional(),
-});
-
-type AppointmentFormValues = z.infer<typeof appointmentSchema>;
-
 const AppointmentForm: FC<AppointmentFormProps> = ({ onClose }) => {
-  const form = useForm<AppointmentFormValues>({
+  const form = useForm<IAppointment>({
     resolver: zodResolver(appointmentSchema),
     defaultValues: {
-      title: "",
-      date: "",
-      time: "",
-      description: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      phone: "",
+      status: "CONFIRMED",
+      appointmentDate: "",
+      appointmentTime: "",
+      reasonOfVisit: "",
     },
   });
 
-  function onSubmit(values: AppointmentFormValues) {
+  function onSubmit(values: IAppointment) {
     console.log(values);
     form.reset();
     onClose();
@@ -64,28 +71,15 @@ const AppointmentForm: FC<AppointmentFormProps> = ({ onClose }) => {
       </SheetHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
-              name="date"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input placeholder="John" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +87,97 @@ const AppointmentForm: FC<AppointmentFormProps> = ({ onClose }) => {
             />
             <FormField
               control={form.control}
-              name="time"
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="col-span-full">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="john@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem className="col-span-full">
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="123 Main St" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="1234567890" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+                      <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                      <SelectItem value="VISITED">Visited</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="appointmentDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="appointmentTime"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Time</FormLabel>
@@ -104,20 +188,24 @@ const AppointmentForm: FC<AppointmentFormProps> = ({ onClose }) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="reasonOfVisit"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Enter the purpose of visit here."
+                      className="max-h-32"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <Button type="submit" className="w-full">
             Schedule Appointment
           </Button>

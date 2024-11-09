@@ -31,7 +31,6 @@ import { CirclePlus } from "lucide-react";
 interface TeamFormProps {
   onClose: () => void;
 }
-
 const countryCodeMap = {
   AUSTRALIA: "+61",
   NEPAL: "+977",
