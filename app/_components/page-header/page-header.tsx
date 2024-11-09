@@ -4,21 +4,24 @@ import PageHeaderWithoutForm from "./page-header-without-form";
 interface PageHeaderProps {
   header: string;
   description: string;
+  buttonText?: string;
   pagePath?: string;
-  form?: "TEAM" | "APPOINTMENT";
+  formType?: "TEAM" | "APPOINTMENT";
 }
 
 const PageHeader: FC<PageHeaderProps> = ({
   description,
   header,
-  form,
+  buttonText,
+  formType,
   pagePath,
 }) => {
-  if (form) {
+  if (formType) {
     return (
       <PageHeaderWithForm
+        buttonText={buttonText}
         description={description}
-        form={form}
+        formType={formType}
         header={header}
       />
     );

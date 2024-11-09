@@ -8,7 +8,8 @@ const page = () => {
       <PageHeaderWithForm
         description="This is description"
         header="Header"
-        form="TEAM"
+        formType="APPOINTMENT"
+        buttonText="New Appointment"
       />{" "}
     </div>
   );

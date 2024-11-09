@@ -12,7 +12,8 @@ const Team: FC<TeamProps> = ({}) => {
       <PageHeaderWithForm
         description="View contact information of all the team members."
         header="Team"
-        pagePath="/dashboard/team"
+        formType="TEAM"
+        buttonText="New Member"
       />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <DisplayCard
