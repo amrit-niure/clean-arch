@@ -1,6 +1,6 @@
 "use client";
 import DisplayCard from "@/app/_components/display-card";
-import PageHeader from "@/app/_components/page-header";
+import PageHeaderWithForm from "@/app/_components/page-header/page-header-with-form";
 import { Calendar } from "lucide-react";
 import { FC } from "react";
 
@@ -8,8 +8,8 @@ interface TeamProps {}
 
 const Team: FC<TeamProps> = ({}) => {
   return (
-    <div className="flex  flex-col gap-4">
-      <PageHeader
+    <div className="flex flex-col gap-4">
+      <PageHeaderWithForm
         description="View contact information of all the team members."
         header="Team"
         pagePath="/dashboard/team"
