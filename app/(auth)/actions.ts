@@ -1,6 +1,5 @@
 "use server";
 import { InputParseError } from "@/src/entities/errors/common";
-// import { redirect } from "next/navigation";
 import { signInController } from "@/src/interface-adapters/controllers/auth/sign-in.controller";
 import { Cookie } from "lucia";
 import { cookies } from "next/headers";
