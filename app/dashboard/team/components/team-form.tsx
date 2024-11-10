@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUp, userSchema } from "@/src/entities/models/users";
+import { ApiResponse } from "@/src/entities/models/api-response";
 import {
   Form,
   FormControl,
@@ -27,6 +28,8 @@ import {
   SheetDescription,
 } from "@/app/_components/ui/sheet";
 import { CirclePlus } from "lucide-react";
+import { signUp } from "../actions";
+import { useToast } from "@/app/_hooks/use-toast";
 
 interface TeamFormProps {
   onClose: () => void;
@@ -38,6 +41,7 @@ const countryCodeMap = {
   PHILIPPINES: "+63",
 };
 const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
+  const { toast } = useToast();
   const [countryCode, setCountryCode] = useState("+61");
   const form = useForm<ISignUp>({
     resolver: zodResolver(userSchema),
@@ -55,13 +59,33 @@ const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
       status: "ACTIVE",
     },
   });
+  async function onSubmit(values: ISignUp) {
+    try {
+      const res: ApiResponse = await signUp(values);
 
-  function onSubmit(values: ISignUp) {
-    console.log(values);
-    form.reset();
-    onClose();
+      // Handle error response
+      if (res.error) {
+        toast({
+          variant: "destructive",
+          description: res.error, // Display error message
+        });
+      } else {
+        toast({
+          variant: "default",
+          title: "Action Successful",
+          description: "New Team Member Created",
+        });
+        form.reset(); // Reset the form on success
+        onClose(); // Close the form or modal
+      }
+    } catch (err) {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        description: "An unexpected error occurred. Please try again later.", // Fallback error message
+      });
+    }
   }
-
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === "branch" && value.branch) {
@@ -232,6 +256,52 @@ const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
               </FormItem>
             )}
           />
+          {/* <FormItem className="w-full">
+            <FormLabel>Phone Number</FormLabel>
+            <Controller
+              name="phoneNumber"
+              control={form.control}
+              defaultValue=""
+              render={({ field: { onChange, value } }) => (
+                <PhoneInput
+                  country={"au"}
+                  value={value}
+                  onChange={onChange}
+                  inputStyle={{
+                    width: "100%",
+                    height: "40px",
+                    fontSize: "16px",
+                    paddingLeft: "48px",
+                    borderRadius: "4px",
+                    border: "1px solid #d1d5db",
+                  }}
+                  buttonStyle={{
+                    border: "1px solid #d1d5db",
+                    borderRight: "none",
+                    borderRadius: "4px 0 0 4px",
+                  }}
+                  containerStyle={{
+                    width: "100%",
+                  }}
+                  containerClass="react-tel-input"
+                  inputClass="phone-input"
+                  dropdownStyle={{
+                  }}
+                  searchClass="w-full"
+                  enableSearch
+                  disableSearchIcon
+                  // onlyCountries={['np','ph','ae','au']}
+                  countryCodeEditable={false}
+                  enableAreaCodes={true}
+                  searchPlaceholder="Search countries"
+                />
+              )}
+            />
+            {errors.phoneNumber && (
+              <FormMessage>{errors.phoneNumber.message}</FormMessage>
+            )}
+          </FormItem> */}
+
           <FormField
             control={form.control}
             name="address"

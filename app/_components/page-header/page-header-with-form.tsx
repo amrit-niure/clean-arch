@@ -340,6 +340,7 @@ import { Plus } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/app/_components/ui/sheet";
 import TeamForm from "@/app/dashboard/team/components/team-form";
 import AppointmentForm from "@/app/dashboard/appointments/components/appointment-form";
+import { useSession } from "../providers/session-provider";
 
 interface PageHeaderProps {
   header: string;
@@ -354,6 +355,7 @@ const PageHeaderWithForm: FC<PageHeaderProps> = ({
   buttonText,
   formType,
 }) => {
+  const { user } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   const renderForm = () => {
@@ -379,17 +381,19 @@ const PageHeaderWithForm: FC<PageHeaderProps> = ({
           </CardDescription>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            {buttonText && (
-              <Button
-                className="self-start sm:self-auto transition-colors hover:bg-primary/90"
-                onClick={() => setIsOpen(true)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {buttonText}
-              </Button>
-            )}
-          </SheetTrigger>
+          {user?.role === "ADMIN" && (
+            <SheetTrigger asChild>
+              {buttonText && (
+                <Button
+                  className="self-start sm:self-auto transition-colors hover:bg-primary/90"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  {buttonText}
+                </Button>
+              )}
+            </SheetTrigger>
+          )}
           <SheetContent className="min-w-[600px] sm:w-[600px] lg:w-[900px] overflow-y-auto">
             {renderForm()}
           </SheetContent>

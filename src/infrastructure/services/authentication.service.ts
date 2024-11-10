@@ -111,7 +111,6 @@ export class AuthenticationService implements IAuthenticationService {
     sessionId: string,
   ): Promise<{ user: User | null; session: Session | null }> {
     const result = await this._lucia.validateSession(sessionId);
-    console.log(result);
     if (!result.user || !result.session) {
       return { user: null, session: null };
     }

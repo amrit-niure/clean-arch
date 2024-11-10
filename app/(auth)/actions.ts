@@ -17,7 +17,6 @@ export async function signIn(data: ISignIn) {
     });
     sessionCookie = result.cookie;
   } catch (error) {
-    console.log(error);
     if (error instanceof InputParseError) {
       return {
         error:

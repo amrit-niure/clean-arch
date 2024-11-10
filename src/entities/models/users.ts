@@ -4,7 +4,6 @@ import {
   branchEnum,
   userStatusEnum,
 } from "@/db/drizzle/schema/enums";
-
 export const userSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name must be at least 2 characters.",
@@ -29,9 +28,10 @@ export const userSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
-  phoneNumber: z.string().min(10, {
-    message: "Phone number must be at least 10 digits.",
-  }),
+  phoneNumber: z
+    .string()
+    .max(10, { message: "Phone number must be exactly 10 characters." })
+    .min(10, { message: "Phone number must be exactly 10 characters." }),
   branch: z
     .enum(branchEnum.enumValues, {
       errorMap: () => ({ message: "Invalid Branch. " }),
