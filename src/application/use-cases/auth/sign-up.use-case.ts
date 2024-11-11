@@ -18,7 +18,7 @@ export async function signUpUseCase(
     const hashedPassword = await argon.hash(password);
     const userData = { ...otherData, hashedPassword };
 
-    const user = await usersRepository.createUser(userData); // Business logic: create user
+    const user = await usersRepository.createUser(userData);
     return user;
   } catch (error) {
     if (error instanceof UnauthorizedError) {
