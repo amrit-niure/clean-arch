@@ -21,6 +21,17 @@ export class UsersRepository implements IUsersRepository {
       throw err; // TODO: convert to Entities error
     }
   }
+  async getAllUsers(): Promise<User[] | undefined> {
+    try {
+      const users = await db.query.users.findMany();
+      if (!users) {
+        throw new NotFoundError("User Not found.");
+      }
+      return users;
+    } catch (err) {
+      throw err; // TODO: convert to Entities error
+    }
+  }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
     try {

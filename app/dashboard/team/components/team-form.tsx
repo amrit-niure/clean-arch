@@ -27,25 +27,37 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/app/_components/ui/sheet";
-import { CirclePlus } from "lucide-react";
-import { signUp } from "../actions";
+import { CirclePlus, PenSquare } from "lucide-react";
+import { signUp, updateMember } from "../actions";
 import { useToast } from "@/app/_hooks/use-toast";
 
 interface TeamFormProps {
   onClose: () => void;
+  initialValues?: ISignUp | null;
+  mode?: "create" | "edit";
+  memberId?: string;
 }
+
 const countryCodeMap = {
   AUSTRALIA: "+61",
   NEPAL: "+977",
   DUBAI: "+971",
   PHILIPPINES: "+63",
 };
-const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
+
+const TeamForm: FC<TeamFormProps> = ({
+  onClose,
+  initialValues,
+  mode = "create",
+  memberId,
+}) => {
   const { toast } = useToast();
   const [countryCode, setCountryCode] = useState("+61");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<ISignUp>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       firstName: "",
       middleName: "",
       lastName: "",
@@ -59,33 +71,45 @@ const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
       status: "ACTIVE",
     },
   });
-  async function onSubmit(values: ISignUp) {
-    try {
-      const res: ApiResponse = await signUp(values);
 
-      // Handle error response
+  async function onSubmit(values: ISignUp) {
+    setIsSubmitting(true);
+    try {
+      let res: ApiResponse;
+
+      if (mode === "edit" && memberId) {
+        // Update existing member
+        res = await updateMember(memberId, values);
+      } else {
+        res = await signUp(values);
+      }
+
       if (res.error) {
         toast({
           variant: "destructive",
-          description: res.error, // Display error message
+          description: res.error,
         });
       } else {
         toast({
           variant: "default",
           title: "Action Successful",
-          description: "New Team Member Created",
+          description:
+            mode === "edit" ? "Team Member Updated" : "New Team Member Created",
         });
-        form.reset(); // Reset the form on success
-        onClose(); // Close the form or modal
+        form.reset();
+        onClose();
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast({
         variant: "destructive",
-        description: "An unexpected error occurred. Please try again later.", // Fallback error message
+        description: "An unexpected error occurred. Please try again later.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
+
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === "branch" && value.branch) {
@@ -99,11 +123,22 @@ const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
     <>
       <SheetHeader>
         <SheetTitle className="flex gap-2 items-center">
-          <CirclePlus />
-          Add New Team Member
+          {mode === "edit" ? (
+            <>
+              <PenSquare />
+              Edit Team Member
+            </>
+          ) : (
+            <>
+              <CirclePlus />
+              Add New Team Member
+            </>
+          )}
         </SheetTitle>
         <SheetDescription>
-          Only Admins can create new team members.
+          {mode === "edit"
+            ? "Update team member details"
+            : "Only Admins can create new team members."}
         </SheetDescription>
       </SheetHeader>
       <Form {...form}>
@@ -339,8 +374,12 @@ const TeamForm: FC<TeamFormProps> = ({ onClose }) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Add Member
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting
+              ? "Processing..."
+              : mode === "edit"
+                ? "Update Member"
+                : "Add Member"}
           </Button>
         </form>
       </Form>
